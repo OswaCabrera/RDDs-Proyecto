@@ -59,26 +59,30 @@ class OperacionGroup(Operacion):
   def __init__(self, operacion_anterior):
     self.operacion_anterior = operacion_anterior
   
-  def buscarKey(val, lista):
+  def buscarKey(self,val, lista):
+    print(val)
     for index, item in enumerate(lista):
+      print(item)
       if val == item[0]:
+        print(index)
         return index
 
   def resultado(self):
     self.datos = self.operacion_anterior.resultado()
     #array de tuplas
     arrayResultado = []
+    tupla_aux = []
     array_aux = []
     keys = []
     for item in self.datos:
       if item[0] in keys:
-        indice = self.buscarKey(item[0])
-        array_aux = arrayResultado[indice]
-        array_aux.append(item[1])
-        array_aux.sort()
+        indice = self.buscarKey(item[0], arrayResultado)
+        tupla_aux = arrayResultado[indice]
+        tupla_aux[1].append(item[1])
+        tupla_aux[1].sort()
         # arrayResultado.append((item[0], array_aux))
-        arrayResultado[item[0]] = array_aux
-        array_aux = []
+        arrayResultado[indice] = tupla_aux
+        tupla_aux = []
       else:
         keys.append(item[0])
         array_aux.append(item[1])
