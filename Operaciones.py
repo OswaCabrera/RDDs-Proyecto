@@ -141,6 +141,14 @@ def group(datos):
       array_aux = []
   return arrayResultado
 
+def printInfo():
+  print('Ordenamiento topológico')
+  lineage_graph.topologicalSort()
+  print("Tareas que se pueden ejecutar paralelamente:")
+  for index, nivel in enumerate(paralelo):
+    print(str(index + 1) + ':')
+    print(nivel)
+
 
 def main():
   inicio = OperacionInicial([1, 2, 3, 4, 5])
@@ -163,9 +171,7 @@ def main():
 
   # lista5 = OperacionJoin(lista_2, lista3)
   # print(lista5.resultado()) 
-  print("Ordenamiento Topologico")
-  lineage_graph.topologicalSort()
-  print(paralelo)
+  printInfo()
 
 if __name__ == "__main__":
     main()
