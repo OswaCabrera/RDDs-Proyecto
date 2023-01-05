@@ -16,6 +16,7 @@ class TestRDDs(unittest.TestCase):
     def test_operacionReduceTupla(self):
         lista = OperacionInicial([('llave1',5), ('llave1',6), ('llave2', 3), , ('llave2', 8)])
         lista_reduce = OperacionReduce(lista3, lambda a,b: a+b)
+        printInfo()
     def test_operacionUnion(self):
          primero = OperacionInicial([1, 2, 3, 4, 5])
          segundo = OperacionInicial([6, 7, 8, 9, 10])
