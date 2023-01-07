@@ -1,17 +1,28 @@
 import functools
 from Graph import Graph
 
+# Grafo de linearidad 
 lineage_graph = Graph(0)
+# Arreglo de tareas que se pueden paralelizar
+# Las tareas que estén en la misma posición del arreglo que se pueden
+# ejecutar paralelamente pero deben esperar a las tareas que están
+# en una posición del arreglo menor 
 paralelo = [[]]
 
 class Operacion:
   def __init__(self, operacion_anterior, operador):
     self.operacion_anterior = operacion_anterior
     self.operador = operador
+    # El nivel que tenga una operación será determinado por el nivel de la operación 
+    # anterior más 1
     self.nivel = operacion_anterior.nivel + 1
+    # El id de una operación será el número del tamaño del grafo
     self.id = lineage_graph.V 
     lineage_graph.V = lineage_graph.V + 1 
+    # Hacemos la conexión que nos dice que la operación anterior generó la operación 
+    # que se está creando
     lineage_graph.addEdge(operacion_anterior.id,self.id)
+    # Agregamos la operación al arreglo de la posición que le corresponda
     if len(paralelo) == self.nivel:
       array_aux_paral = [self.id]
       paralelo.append(array_aux_paral)
@@ -21,6 +32,7 @@ class Operacion:
 class OperacionInicial(Operacion):
   def __init__(self, datos):
     self.datos = datos
+    # Es una operación inicial, no se generá de otro así que puede ser de las primeras en ejecutarse
     self.nivel = 0
     self.id = lineage_graph.V
     lineage_graph.V = lineage_graph.V + 1
@@ -38,6 +50,7 @@ class OperacionMap(Operacion):
 class OperacionReduce(Operacion):
   def resultado(self):
     resultado_previo = self.operacion_anterior.resultado()
+    # Hacemos la distinción de si se hará reduce a un arreglo de enteros o de claves llave-valor
     if(type(resultado_previo[0])=='int'):
       self.datos = functools.reduce(self.operador, resultado_previo)
     else:
@@ -84,7 +97,6 @@ class OperacionGroup(Operacion):
 
   def resultado(self):
     self.datos = self.operacion_anterior.resultado()
-    #array de tuplas
     self.datos = group(self.datos)
     return self.datos
 
@@ -121,6 +133,7 @@ def buscarKey(val, lista):
         print(index)
         return index
 
+# Función que nos permite agrupar valores por su llave
 def group(datos):
   arrayResultado = []
   tupla_aux = []
@@ -144,7 +157,7 @@ def group(datos):
 def printInfo():
   print('Ordenamiento topológico')
   lineage_graph.topologicalSort()
-  print("Tareas que se pueden ejecutar paralelamente:")
+  print("Tareas que se pueden ejecutar paralelamente (Los niveles más altos deben esperar a los más bajos para ejecutarse):")
   for index, nivel in enumerate(paralelo):
-    print(str(index + 1) + ':')
+    print('Nivel: ' + str(index + 1) + ':')
     print(nivel)
